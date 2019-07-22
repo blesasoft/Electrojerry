@@ -1,0 +1,73 @@
+//The blob detection part of the code was done using the existing code shared by The Coding Train on youtube.
+
+class Blob {
+  float minx;
+  float miny;
+  float maxx;
+  float maxy;
+
+
+
+  ArrayList<PVector> points;
+
+  Blob(float x, float y) {
+    minx = x;
+    miny = y;
+    maxx = x;
+    maxy = y;
+
+    
+    points = new ArrayList<PVector>();
+    points.add(new PVector(x, y));
+  }
+
+  void show() {
+    stroke(0);
+    fill(255);
+    strokeWeight(2);
+    rectMode(CORNERS);
+    rect(minx, miny, maxx, maxy);
+    
+    if(minx<(640/5)){counter1++;} //CAMBIAR CUANDO CAMBIA LA CAMARAAAAA Solo calcula desde la izquierda del rectangulo. Se puede hacer desde el punto medio (minx+maxx)/2 p
+    if(minx>(640/5) && minx<(2*640/5)){counter2++;} //CAMBIAR CUANDO CAMBIA LA CAMARAAAAA   pero haria al programa mas lento y no merece la pena a efectos practicos es lo mismo
+    if(minx>(2*640/5) && minx<(3*640/5)){counter3++;} //CAMBIAR CUANDO CAMBIA LA CAMARAAAAA  
+    if(minx>(3*640/5) && minx<(4*640/5)){counter4++;} //CAMBIAR CUANDO CAMBIA LA CAMARAAAAA  
+    if(minx>(4*640/5)){counter5++;} //CAMBIAR CUANDO CAMBIA LA CAMARAAAAA  
+  }
+
+
+  void add(float x, float y) {
+    points.add(new PVector(x, y));
+    minx = min(minx, x);
+    miny = min(miny, y);
+    maxx = max(maxx, x);
+    maxy = max(maxy, y);
+  }
+
+  float size() {
+    return (maxx-minx)*(maxy-miny);
+  }
+
+  boolean isNear(float x, float y) {
+
+    // The Rectangle "clamping" strategy
+    // float cx = max(min(x, maxx), minx);
+    // float cy = max(min(y, maxy), miny);
+    // float d = distSq(cx, cy, x, y);
+
+    // Closest point in blob strategy
+    float d = 10000000;
+    for (PVector v : points) {
+      float tempD = distSq(x, y, v.x, v.y);
+      if (tempD < d) {
+        d = tempD;
+      }
+    }
+
+    if (d < distThreshold*distThreshold) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+}
